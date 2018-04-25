@@ -13,9 +13,9 @@ public class UtilityProperty extends Property
      * @param propertyNum is the property's position on the board
      * @param name is the name of the property
      */
-    public UtilityProperty(int propertyNum, String name)
+    public UtilityProperty(int propertyNum, String name, int XCoord, int YCoord)
     {
-        super(propertyNum, 150, 1);
+        super(propertyNum, 150, 1, XCoord, YCoord);
         this.IS_FOR_SALE = true;
         this.NAME = name;
     }

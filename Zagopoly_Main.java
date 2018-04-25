@@ -6,6 +6,10 @@
  * @version 1.0, 03/28/2018
  */
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Scanner;
 
 public class Zagopoly_Main
@@ -94,6 +98,72 @@ public class Zagopoly_Main
      */
     public static void main(String[] args) throws CloneNotSupportedException
     {
+        PlayerIcon Icon1 = new PlayerIcon();
+        GameBoardUI gui = new GameBoardUI(Icon1);
+
+
+        class MainMenu extends JFrame implements ActionListener {
+            private JPanel Menu = new JPanel();
+            private static final int DEFAULT_WIDTH = 600;
+            private static final int DEFAULT_HEIGHT = 500;
+            private JButton startButton = new JButton("Start");
+            private JButton instructionsButton = new JButton("Instructions");
+            private JButton exitButton = new JButton("Exit");
+
+
+
+            public MainMenu(){
+                setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+                addButtons();
+                add(Menu);
+                setTitle("Main Menu");
+                setLocationRelativeTo(null);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setBackground(Color.BLUE);
+                this.setVisible(true);
+            }
+
+            private void addButtons(){
+                startButton.addActionListener(this);
+                instructionsButton.addActionListener(this);
+                exitButton.addActionListener(this);
+
+                Menu.add(startButton);
+                Menu.add(instructionsButton);
+                Menu.add(exitButton);
+            }
+
+
+            public void initUI(){
+                MouseCoordinateFinder mcf = new MouseCoordinateFinder();
+                addMouseListener(mcf);
+                add(gui);
+
+                setTitle("Zagopoly");
+                setSize(580, 600);
+                setLocationRelativeTo(null);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object source = e.getSource();
+                if (source == exitButton){
+                    System.exit(0);
+                }
+                else if(source == startButton){
+                    Menu.setVisible(false);
+                    initUI();
+                }
+                else if (source == instructionsButton){
+                    System.exit(0);
+                }
+            }
+        }
+
+        MainMenu Menu = new MainMenu();
         char playAgain = 'y';
         while(playAgain == 'y')
         {
@@ -141,8 +211,9 @@ public class Zagopoly_Main
                         // Roll
                         theDice.rollDice();
                         theDice.displayRoll();
-                        players[currentPlayer].movePlayer(theDice.getTotalRoll());
-                        //players[currentPlayer].movePlayer(30);
+                        players[currentPlayer].relocatePlayer(32);
+                       // players[currentPlayer].movePlayer(theDice.getTotalRoll());
+                        gui.step(gameBoard, players[currentPlayer]);
 
 
                         // Display info of square that was landed on
@@ -192,6 +263,7 @@ public class Zagopoly_Main
                             {
                                 System.out.println("Go directly to Campo. Do not pass go, do not collect $200.");
                                 players[currentPlayer].imprisonPlayer();
+                                gui.step(gameBoard,players[currentPlayer]);
                             }
                         }
                         players[currentPlayer].displayStats();

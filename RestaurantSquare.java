@@ -13,9 +13,9 @@ public class RestaurantSquare extends Property
      * @param propertyNumber is the position of the restaurant square on the board
      * @param name is the name of the property
      */
-    public RestaurantSquare(int propertyNumber, String name)
+    public RestaurantSquare(int propertyNumber, String name, int XCoord, int YCoord)
     {
-        super(propertyNumber, 200, 50);
+        super(propertyNumber, 200, 50, XCoord, YCoord);
         this.IS_FOR_SALE = true;
         this.NAME = name;
     }

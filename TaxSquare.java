@@ -15,9 +15,9 @@ public class TaxSquare extends Property
      * @param tax is the amount the player will have to pay when they land on the tax square
      * @param name is the name of the tax square
      */
-    public TaxSquare(int squareNum, int tax, String name)
+    public TaxSquare(int squareNum, int tax, String name, int XCoord, int YCoord)
     {
-        super(squareNum, 0, tax);
+        super(squareNum, 0, tax, XCoord, YCoord);
         this.NAME = name;
     }
 

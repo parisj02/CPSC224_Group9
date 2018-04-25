@@ -11,9 +11,9 @@ public class CampoSquare extends Property
     /**
      * constructor for class CampoSquare
      */
-    public CampoSquare()
+    public CampoSquare(int XCoord, int YCoord)
     {
-        super(10, 0, 0);
+        super(10, 0, 0, XCoord, YCoord);
         NAME = "Campo Square";
     }
 

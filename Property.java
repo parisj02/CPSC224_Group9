@@ -16,6 +16,8 @@ public class Property
     protected boolean IS_FOR_SALE;
     protected String NAME;
     protected Player OWNER;
+    protected int X;
+    protected int Y;
 
     /**
      * constructor for class Property
@@ -24,7 +26,7 @@ public class Property
      * @param propertyRent is the rent that must be paid on that property to the property's owner
      *                     by other players who land there
      */
-    public Property(int propertyNum, int propertyPrice, int propertyRent)
+    public Property(int propertyNum, int propertyPrice, int propertyRent, int XCoord, int YCoord)
     {
         this.PROPERTY_NUMBER = propertyNum;
         this.PRICE = propertyPrice;
@@ -33,6 +35,8 @@ public class Property
         this.IS_MORTGAGED = false;
         this.IS_FOR_SALE = false;
         this.NAME = "Free Parking";
+        this.X = XCoord;
+        this.Y = YCoord;
     }
 
     /**
@@ -83,6 +87,26 @@ public class Property
     public void getServiceCard(Player currentPlayer)
     {
         System.out.println("Unimplemented Function.");
+    }
+
+    /**
+     * displayPropertyInfo displays all of the property's key information
+     */
+
+    /**
+     * gets the X coordinate of the current property for the board
+     * @return X coordinate
+     */
+    public int getX(){
+        return this.X;
+    }
+
+    /**
+     * gets the X coordinate of the current property for the board
+     * @returnY coordinate
+     */
+    public int getY(){
+        return this.Y;
     }
 
     /**

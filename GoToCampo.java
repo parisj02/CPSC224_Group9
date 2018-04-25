@@ -11,9 +11,9 @@ public class GoToCampo extends Property
     /**
      * constructor of class GoToCampo
      */
-    public GoToCampo()
+    public GoToCampo(int XCoord, int YCoord)
     {
-        super(30, 0, 0);
+        super(30, 0, 0, XCoord, YCoord);
         NAME = "Go To Campo";
     }
 

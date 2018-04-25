@@ -5,16 +5,18 @@ import java.awt.*;
 
         private int dx;
         private int dy;
-        private int x = 40;
-        private int y = 60;
+        private int x = 510 ;
+        private int y = 530;
         private int w;
         private int h;
         private Image image;
+
 
         public PlayerIcon() {
 
             loadImage();
         }
+
 
         private void loadImage() {
 
@@ -25,10 +27,12 @@ import java.awt.*;
             h = image.getHeight(null);
         }
 
-        public void move() {
-
-            x += dx;
-            y += dy;
+        public void move(Board theBoard, Player currentPlayer) {
+            Property tempProperty = theBoard.getSquare(currentPlayer.currentSquare());
+            int moveToX = tempProperty.getX();
+            int moveToY = tempProperty.getY();
+            x = moveToX;
+            y = moveToY;
         }
 
         public int getX() {

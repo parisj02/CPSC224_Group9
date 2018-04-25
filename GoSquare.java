@@ -14,9 +14,9 @@ public class GoSquare extends Property
      * constructor for class GoSquare
      * @param players is the array containing all of the players in the game
      */
-    public GoSquare(Player players[])
+    public GoSquare(Player players[], int XCoord, int YCoord)
     {
-        super(0, 0, 0);
+        super(0, 0, 0, XCoord, YCoord);
         this.OWNERS = new Player[players.length];
         initOwners(players);
     }

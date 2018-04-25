@@ -22,9 +22,9 @@ public class PrimaryProperty extends Property
      *                     by other players who land there
      * @param name is the name of the primary property (e.g. Kennedy Apartments)
      */
-    public PrimaryProperty(int propertyNum, int propertyPrice, int propertyRent, int priceOfAHouse, String name)
+    public PrimaryProperty(int propertyNum, int propertyPrice, int propertyRent, int priceOfAHouse, String name, int XCoord, int YCoord)
     {
-        super(propertyNum, propertyPrice, propertyRent);
+        super(propertyNum, propertyPrice, propertyRent, XCoord, YCoord );
         this.HOUSE_PRICE = priceOfAHouse;
         this.NUM_HOUSES = 0;
         this.NUM_HOTELS = 0;

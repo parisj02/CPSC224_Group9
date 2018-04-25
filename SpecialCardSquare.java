@@ -16,9 +16,9 @@ public class SpecialCardSquare extends Property
      * constructor for class SpecialCardSquare
      * @param squareNum is the position of the square on the board
      */
-    public SpecialCardSquare(int squareNum, String name)
+    public SpecialCardSquare(int squareNum, String name, int XCoord, int YCoord)
     {
-        super(squareNum, 0, 0);
+        super(squareNum, 0, 0, XCoord, YCoord);
         this.NAME = name;
     }
 
@@ -34,7 +34,7 @@ public class SpecialCardSquare extends Property
      * getServiceCard overrides getServiceCard of Property and gives the player a random card
      * @param currentPlayer is the player who landed on the square
      */
-    public void getServiceCard(Player currentPlayer)
+    public void getServiceCard(Player currentPlayer, Board gameBoard, GameBoardUI gui)
     {
         int CardNumber = (int) (Math.random() * 15 + 1);
         //int CardNumber = 12;
@@ -92,12 +92,15 @@ public class SpecialCardSquare extends Property
                 CardNumber = 9;
                 System.out.println("Hamburgers at Late Night, go straight to Hemmingson");
                 currentPlayer.relocatePlayer(34);
+                gui.step(gameBoard, currentPlayer);
+
                 break;
 
             case 10:
                 CardNumber = 10;
                 System.out.println("Friend invited you over to their apartment, go straight to Dussault");
                 currentPlayer.relocatePlayer(31);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 11:
@@ -130,6 +133,7 @@ public class SpecialCardSquare extends Property
                 CardNumber = 15;
                 System.out.println("Go on a tour of the new athletic building, go straight to Volker");
                 currentPlayer.relocatePlayer(39);
+                gui.step(gameBoard, currentPlayer);
                 break;
         }
     }
@@ -138,43 +142,50 @@ public class SpecialCardSquare extends Property
      * getChanceCard retrieves a chance card for the player
      * @param currentPlayer is the player who landed on the square
      */
-    public void getChanceCard(Player currentPlayer) {
+    public void getChanceCard(Player currentPlayer, Board gameBoard, GameBoardUI gui) {
         int CardNumber = (int)(Math.random() * 15 + 1);
 
         switch(CardNumber) {
             case 1: CardNumber = 1;
                 System.out.println("Advance Straight to Go!");
                 currentPlayer.relocatePlayer(0);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 2: CardNumber = 2;
                 System.out.println("Pulling an all nighter, take a trip to Starbucks");
                 currentPlayer.relocatePlayer(25);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 3: CardNumber = 3;
                 System.out.println("Time for a Zags Game, Advance to McCarthy");
                 currentPlayer.relocatePlayer(39);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 4: CardNumber = 4;
                 System.out.println("Room searched by RA's, Go straight to Campus Security");
                 currentPlayer.relocatePlayer(10);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 5: CardNumber = 5;
                 System.out.println("Parking Violation, pay 50");
                 currentPlayer.finePlayer(50);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 6: CardNumber = 6;
                 System.out.println("Win the biggest Zags Fan Competition, earn 75");
                 currentPlayer.payPlayer(75);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 7: CardNumber = 7;
                 System.out.println("Time for Biology, Go straight to Hughes");
                 currentPlayer.relocatePlayer(21);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 8: CardNumber = 8;
@@ -197,6 +208,7 @@ public class SpecialCardSquare extends Property
             case 11: CardNumber = 11;
                 System.out.println("Time for philosophy, go straight to college hall");
                 currentPlayer.relocatePlayer(24);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 12: CardNumber = 12;
@@ -207,6 +219,7 @@ public class SpecialCardSquare extends Property
             case 13: CardNumber = 13;
                 System.out.println("Found a nice parking spot, go to free parking");
                 currentPlayer.relocatePlayer(20);
+                gui.step(gameBoard, currentPlayer);
                 break;
 
             case 14: CardNumber = 14;
@@ -217,6 +230,7 @@ public class SpecialCardSquare extends Property
             case 15: CardNumber = 15;
                 System.out.println("You lost your zag card, go straight to hemmingson to check lost and found");
                 currentPlayer.relocatePlayer(34);
+                gui.step(gameBoard, currentPlayer);
                 break;
         }
     }
