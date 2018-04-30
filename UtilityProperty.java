@@ -21,17 +21,45 @@ public class UtilityProperty extends Property
     }
 
     /**
+     * updateRent overrides updateRent of Property by updating the rent based on the number of Utilities that the
+     * player owns
+     */
+    public void updateRent(ZagopolyDice theDice)
+    {
+        if(OWNER.getNumberOfUtilities() == 1)
+        {
+            RENT = 4 * theDice.getTotalRoll();
+        }
+        if(OWNER.getNumberOfUtilities() == 2)
+        {
+            RENT = 10 * theDice.getTotalRoll();
+        }
+    }
+
+    /**
      * displayPropertyInfo of class UtilityProperty overrides displayPropertyInfo of class Property
      */
     public void displayPropertyInfo()
     {
         System.out.println("Property Name: " + this.NAME);
         System.out.println("Property Price: " + this.PRICE);
-        System.out.println("Property Rent: 4 times the player's roll");
-        System.out.println("Property Mortgage: " + this.MORTGAGE);
+        if(OWNER.getNumberOfUtilities() == 1)
+            System.out.println("Property Rent: 4x the player's roll");
+        if(OWNER.getNumberOfUtilities() == 2)
+            System.out.println("Property Rent: 10x the player's roll");
+        //System.out.println("Property Mortgage: " + this.MORTGAGE);
         if(isOwned())
-            System.out.println("Property Owner: " + this.OWNER.getName());
+            System.out.println("Property Owner: Player " + this.OWNER.getPlayerNum());
         else
             System.out.println("Property is unowned.");
+    }
+
+    /**
+     * isUtility checks if the property is a utility
+     * @return true
+     */
+    public boolean isUtility()
+    {
+        return true;
     }
 }

@@ -19,4 +19,35 @@ public class RestaurantSquare extends Property
         this.IS_FOR_SALE = true;
         this.NAME = name;
     }
+
+    /**
+     * updateRent overrides updateRent of Property and changes the property's rent
+     * @param theDice is the game dice
+     */
+    public void updateRent(ZagopolyDice theDice)
+    {
+        if(OWNER.getNumberOfRestaurants() == 2)
+        {
+            RENT = 100;
+        }
+        else if(OWNER.getNumberOfRestaurants() == 3)
+        {
+            RENT = 150;
+        }
+        else if(OWNER.getNumberOfRestaurants() == 4)
+        {
+            RENT = 200;
+        } else{
+            RENT = 50;
+        }
+    }
+
+    /**
+     * isRestaurant checks to see if the current square is a restaurant square
+     * @return true
+     */
+    public boolean isRestaurant()
+    {
+        return true;
+    }
 }

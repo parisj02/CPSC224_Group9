@@ -8,8 +8,6 @@
 
 public class GoSquare extends Property
 {
-    private Player[] OWNERS;
-
     /**
      * constructor for class GoSquare
      * @param players is the array containing all of the players in the game
@@ -17,8 +15,6 @@ public class GoSquare extends Property
     public GoSquare(Player players[], int XCoord, int YCoord)
     {
         super(0, 0, 0, XCoord, YCoord);
-        this.OWNERS = new Player[players.length];
-        initOwners(players);
     }
 
     /**
@@ -28,17 +24,5 @@ public class GoSquare extends Property
     public void displayPropertyInfo()
     {
         System.out.println("The Go Square");
-    }
-
-    /**
-     * initPlayerX initializes a new player as an owner of "Go" (all players own "Go")
-     * @param players is the array containing the players in the game
-     */
-    private void initOwners(Player players[])
-    {
-        for(int i = 0; i < OWNERS.length; i++)
-        {
-            this.OWNERS[i] = players[i];
-        }
     }
 }

@@ -43,6 +43,8 @@ public class ZagopolyDice
      */
     public void resetDice()
     {
+        for(int r = 0; r < rolls.length; r++)
+            rolls[r] = 0;
         total = 0;
     }
 
@@ -61,7 +63,7 @@ public class ZagopolyDice
             {
                 System.out.printf(rolls[r] + ", ");
             }
-            System.out.println("so the player will move " + total + " squares.");
+            System.out.println("so the player will move " + total + " squares unless they are in Campo.");
         }
     }
 
@@ -74,9 +76,13 @@ public class ZagopolyDice
         return total;
     }
 
+    /**
+     * doubles checks to see if the player rolled a doubles
+     * @return true if both dice have the same value
+     */
     public boolean doubles()
     {
-        if(rolls[0] == rolls[1])
+        if(rolls[0] == rolls[1] && rolls[0] != 0)
             return true;
         return false;
     }

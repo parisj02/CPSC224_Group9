@@ -24,4 +24,13 @@ public class CampoSquare extends Property
     {
         System.out.println("The Campo Square");
     }
+
+    /**
+     * isCampoSquare checks to see if the current square is the campo square
+     * @return true
+     */
+    public boolean isCampoSquare()
+    {
+        return true;
+    }
 }
