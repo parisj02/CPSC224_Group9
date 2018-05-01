@@ -22,14 +22,6 @@ public class TaxSquare extends Property
     }
 
     /**
-     * displayPropertyInfo for class TaxSquare square overrides displayPropertyInfo of class Player
-     */
-    public void displayPropertyInfo()
-    {
-        System.out.println("The " + this.NAME + " Square");
-    }
-
-    /**
      * isTaxSquare checks if the current square is a tax square
      * @return true
      */

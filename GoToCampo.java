@@ -18,14 +18,6 @@ public class GoToCampo extends Property
     }
 
     /**
-     * displayPropertyInfo overrides displayPropertyInfo of class Property
-     */
-    public void displayPropertyInfo()
-    {
-        System.out.println("The 'Go to Campo' Square");
-    }
-
-    /**
      * isGoToCampoSquare automatically returns true because this is the Go To Campo square
      * @return true
      */

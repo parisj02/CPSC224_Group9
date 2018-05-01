@@ -43,25 +43,27 @@ public class ZagopolyDice
      */
     public void resetDice()
     {
+        for(int r = 0; r < rolls.length; r++)
+            rolls[r] = 0;
         total = 0;
     }
 
     /**
      * displayRoll displays the player's most recent roll
      */
-    public void displayRoll()
+    public void displayRoll(ZagopolyTextWindow TextWindow)
     {
         if (noRolls())
-            System.out.println("The player has not yet rolled anything.");
+            TextWindow.printMessage("The player has not yet rolled anything.");
         else {
             if(doubles())
-                System.out.printf("YOU ROLLED A DOUBLES!! ");
-            System.out.printf("Player's roll was: ");
+                TextWindow.printMessage("YOU ROLLED A DOUBLES!! ");
+            TextWindow.printMessage("Player's roll was: ");
             for(int r = 0; r < rolls.length; r++)
             {
-                System.out.printf(rolls[r] + ", ");
+                TextWindow.printMessage(rolls[r] + ", ");
             }
-            System.out.println("so the player will move " + total + " squares.");
+            TextWindow.printMessage("The player will move " + total + " squares unless they are in Campo.");
         }
     }
 
@@ -74,9 +76,13 @@ public class ZagopolyDice
         return total;
     }
 
+    /**
+     * doubles checks to see if the player rolled a doubles
+     * @return true if both dice have the same value
+     */
     public boolean doubles()
     {
-        if(rolls[0] == rolls[1])
+        if(rolls[0] == rolls[1] && rolls[0] != 0)
             return true;
         return false;
     }

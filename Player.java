@@ -16,49 +16,41 @@ public class Player implements Cloneable
     private int PLAYER_PRIORITY;
     private int POSITION;
     private int ACCOUNT;
+    private int RESTAURANTS_OWNED;
+    private int UTILITIES_OWNED;
     private int HOUSES_OWNED;
     private int HOTELS_OWNED;
     private int TURNS_IN_JAIL;
     private boolean PASSED_GO;
     private boolean IS_FREE;
-    private String NAME;
+    private boolean GET_OUT_OF_CAMPO_CARD;
+    private boolean ELIMINATED;
+    private ZagopolyTextWindow TEXT_WINDOW;
     private ArrayList<Property> HAND;
+    private ArrayList<Set> OWNED_SETS;
 
     /**
      * Constructor for class Player
      * @param pNumber is the number of players
      */
-    public Player(int pNumber, String pName)
+    public Player(int pNumber, ZagopolyTextWindow textWindow)
     {
         PLAYER_NUM = pNumber;
-        NAME = pName;
+        //NAME = pName;
         POSITION = 0;
         ACCOUNT = 1500;
+        RESTAURANTS_OWNED = 0;
+        UTILITIES_OWNED = 0;
         HOUSES_OWNED = 0;
         HOTELS_OWNED = 0;
         TURNS_IN_JAIL = 0;
         PASSED_GO = false;
         IS_FREE = true;
+        GET_OUT_OF_CAMPO_CARD = false;
+        ELIMINATED = false;
+        TEXT_WINDOW = textWindow;
         HAND = new ArrayList<>();
-    }
-
-    /**
-     * clone() clones a Player
-     * @return cloned
-     * @throws CloneNotSupportedException
-     */
-    public Player clone() throws CloneNotSupportedException
-    {
-        try{
-            Player cloned = (Player) super.clone();
-            return cloned;
-        } catch(CloneNotSupportedException E) {
-            E.printStackTrace();
-            return null;
-        }
-        //cloned.PLAYER_NUM = PLAYER_NUM;
-        //cloned.PLAYER_PRIORITY = PLAYER_PRIORITY;
-        //return null;
+        OWNED_SETS = new ArrayList<>();
     }
 
     /**
@@ -86,6 +78,55 @@ public class Player implements Cloneable
     public void finePlayer(int fine)
     {
         ACCOUNT -= fine;
+    }
+
+    /**
+     * addRestaurant increments the number of restaurants that the player owns
+     */
+    public void addRestaurant()
+    {
+        RESTAURANTS_OWNED++;
+    }
+
+    /**
+     * addUtility increments the number of Utilities that the player owns
+     */
+    public void addUtility()
+    {
+        UTILITIES_OWNED++;
+    }
+
+    /**
+     * buyHouse increments the number of houses that the player owns by 1
+     */
+    public void buyHouse()
+    {
+        HOUSES_OWNED++;
+    }
+
+    /**
+     * buyHotel increments the number of hotels that the player owns by 1
+     */
+    public void buyHotel()
+    {
+        HOTELS_OWNED++;
+    }
+
+    /**
+     * updateRestaurantRent updates the rents of all the restaurants that the player owns
+     * @param theDice is the game dice
+     */
+    public void updateRestaurantRents(ZagopolyDice theDice)
+    {
+        Property[] ownedProperties = new Property[HAND.size()];
+        ownedProperties = HAND.toArray(ownedProperties);
+        for(int p = 0; p < HAND.size(); p++)
+        {
+            if(ownedProperties[p].isRestaurant())
+            {
+                ownedProperties[p].updateRent(theDice);
+            }
+        }
     }
 
     /**
@@ -126,6 +167,19 @@ public class Player implements Cloneable
     }
 
     /**
+     * takeOwnerShipOfSets adds a set to the player's OWNED_SETS if the player owns all of the properties in that set
+     * @param S is the new set
+     */
+    public void takeOwnerShipOfSet(Set S)
+    {
+        if(S.isOwned())
+        {
+            OWNED_SETS.add(S);
+            TEXT_WINDOW.printMessage("You now own the " + S.getSetName() + " !");
+        }
+    }
+
+    /**
      * removeProperty takes the property away from the player
      * @param P is the property to be removed from the player's hand
      */
@@ -149,35 +203,125 @@ public class Player implements Cloneable
     public void incrementTurnsInJail()
     {
         TURNS_IN_JAIL++;
-        System.out.println("You have been in Campo for " + TURNS_IN_JAIL + " turns.");
+        TEXT_WINDOW.printMessage("You have been in Campo for " + TURNS_IN_JAIL + " turns.");
     }
-    // Functions we need:
-            // Remove a property from a player's hand
-            // Eliminate player??????
+
+    /**
+     * gives the player a "Get out of Campo Free" card
+     */
+    public void giveGetOutOfCampoFreeCard()
+    {
+        GET_OUT_OF_CAMPO_CARD = true;
+    }
+
+    /**
+     * plays the "Get out of Campo Free" card
+     */
+    public void getOutOfCampoFree()
+    {
+        if(GET_OUT_OF_CAMPO_CARD)
+        {
+            GET_OUT_OF_CAMPO_CARD = false;
+            freePlayer();
+        } else{
+            TEXT_WINDOW.printMessage("Choose another option.");
+        }
+    }
+
+    /**
+     * freePlayer frees the player from Campo
+     */
+    public void freePlayer()
+    {
+        IS_FREE = true;
+    }
+
+    /**
+     * eliminatePlayer eliminates this player from the game
+     */
+    public void eliminatePlayer()
+    {
+        if(ACCOUNT == 0)
+        {
+            TEXT_WINDOW.printMessage("Player " + PLAYER_NUM + " has been eliminated. All his/her" +
+                    " properties will now be unowned.");
+            Set[] OwnedSets = new Set[OWNED_SETS.size()];
+            OwnedSets = OWNED_SETS.toArray(OwnedSets);
+            Property[] OwnedProperties = new Property[HAND.size()];
+            OwnedProperties = HAND.toArray(OwnedProperties);
+
+            if(OWNED_SETS.size() > 0)
+            {
+                for(int s = 0; s < OwnedSets.length; s++)
+                {
+                    OwnedSets[s].removeOwner();
+                }
+                OWNED_SETS.clear();
+            }
+            if(HAND.size() > 0)
+            {
+                for(int p = 0; p < OwnedProperties.length; p++)
+                {
+                    OwnedProperties[p].removeOwner();
+                    if(OwnedProperties[p].isPrimary())
+                    {
+                        OwnedProperties[p].removeHotel(TEXT_WINDOW);
+                        while(OwnedProperties[p].getNumHouses() > 0)
+                        {
+                            OwnedProperties[p].removeHouse(TEXT_WINDOW);
+                        }
+                        OwnedProperties[p].resetRent();
+                    }
+                    HAND.clear();
+                }
+            }
+            ELIMINATED = true;
+        } else{
+            TEXT_WINDOW.printMessage("This player still has money and therefore can still survive!");
+        }
+    }
 
     /**
      * displayStats displays all of the current player's assets
      */
-    public void displayStats()
+    public void displayStats(ZagopolyTextWindow TextWindow)
     {
-        System.out.println("Here are player " + PLAYER_NUM + "'s stats: ");
-        System.out.println("Name: " + NAME);
-        System.out.println("Current Balance: " + ACCOUNT);
-        System.out.println("Player is currently at square " + POSITION);
+        TEXT_WINDOW.printMessage("Here are player " + PLAYER_NUM + "'s stats: ");
+        TEXT_WINDOW.printMessage("Current Balance: " + ACCOUNT);
+        TEXT_WINDOW.printMessage("Player is currently at square " + POSITION);
         if(!isFree())
-            System.out.println("Player is currently in detention in Campo");
+            TEXT_WINDOW.printMessage("Player is currently in detention in Campo");
         if(HAND.isEmpty())
-            System.out.println("Player does not currently own any properties");
+            TEXT_WINDOW.printMessage("Player does not currently own any properties");
         else{
             Property[] OwnedProperties = new Property[HAND.size()];
             OwnedProperties = HAND.toArray(OwnedProperties);
-            System.out.println("THE PLAYER CURRENTLY OWNS " + OwnedProperties.length + " PROPERTIES: ");
+            TEXT_WINDOW.printMessage("THE PLAYER CURRENTLY OWNS " + OwnedProperties.length + " PROPERTIES: ");
             for(int i = 0; i < OwnedProperties.length; i++)
             {
-                System.out.println("PROPERTY " + (i+1) + ": ");
-                OwnedProperties[i].displayPropertyInfo();
+                TEXT_WINDOW.printMessage("PROPERTY " + (i+1) + ": ");
+                OwnedProperties[i].displayPropertyInfo(TextWindow);
             }
         }
+        if(!OWNED_SETS.isEmpty())
+        {
+            Set[] OwnedSets = new Set[OWNED_SETS.size()];
+            OwnedSets = OWNED_SETS.toArray(OwnedSets);
+            TEXT_WINDOW.printMessage("THE PLAYER OWNS THE FOLLOWING SETS (every property in this set now has double its former rent)");
+            for(int i = 0; i < OwnedSets.length; i++)
+            {
+                TEXT_WINDOW.printMessage("SET " + (i + 1) + ": " + OwnedSets[i].getSetName());
+            }
+        }
+    }
+
+    /**
+     * getPlayerNum returns the number of the player
+     * @return PLAYER_NUM
+     */
+    public int getPlayerNum()
+    {
+        return PLAYER_NUM;
     }
 
     /**
@@ -187,6 +331,24 @@ public class Player implements Cloneable
     public int getPriority()
     {
         return PLAYER_PRIORITY;
+    }
+
+    /**
+     * getNumberOfRestaurants returns the number of restaurant properties that the player owns
+     * @return RESTAURANTS_OWNED
+     */
+    public int getNumberOfRestaurants()
+    {
+        return RESTAURANTS_OWNED;
+    }
+
+    /**
+     * getNumberOfUtilities returns the number of utility properties that the player owns
+     * @return UTILITIES_OWNED
+     */
+    public int getNumberOfUtilities()
+    {
+        return UTILITIES_OWNED;
     }
 
     /**
@@ -208,6 +370,14 @@ public class Player implements Cloneable
     }
 
     /**
+     * getNumberOfSets returns the size of the OWNED_SETS array list
+     * @return OWNED_SETS.size()
+     */
+    public int getNumberOfSets()
+    {
+        return OWNED_SETS.size();
+    }
+    /**
      * currentSquare returns the square on the board the player is currently at
      * @return POSITION
      */
@@ -217,15 +387,32 @@ public class Player implements Cloneable
     }
 
     /**
+     * getBalance returns the amount of money the player has in their account
+     * @return ACCOUNT
+     */
+    public int getBalance()
+    {
+        return ACCOUNT;
+    }
+
+    /**
+     * ownsNoSets checks to see if the player has any sets in his hand
+     * @return true if he owns no sets
+     */
+    public boolean ownsNoSets()
+    {
+        if(OWNED_SETS.isEmpty())
+            return true;
+        return false;
+    }
+
+    /**
      * passedGo checks to see if the player has passed "Go"
-     * @return true if the player has passed "Go"
+     * @return PASSED_GO
      */
     public boolean passedGo()
     {
-        if(PASSED_GO)
-            return true;
-        else
-            return false;
+        return PASSED_GO;
     }
 
     /**
@@ -234,21 +421,53 @@ public class Player implements Cloneable
      */
     public boolean isFree()
     {
-        if(TURNS_IN_JAIL == 3)
+        if(TURNS_IN_JAIL == 4)
         {
             IS_FREE = true;
             TURNS_IN_JAIL = 0;
-            ACCOUNT -= 50;
+            if(ACCOUNT < 50)
+            {
+                ACCOUNT = 0;
+                eliminatePlayer();
+            } else{
+                ACCOUNT -= 50;
+            }
         }
         return IS_FREE;
     }
 
     /**
-     * getName gets the name of the player
-     * @return NAME, the player name
+     * hasGetOutOfCampoFree checks to see if the player has the special card that allows them to get out of Campo for
+     * free on any given turn in Campo
+     * @return GET_OUT_OF_CAMPO_CARD
      */
-    public String getName()
+    public boolean hasGetOutOfCampoFree()
     {
-        return NAME;
+        return GET_OUT_OF_CAMPO_CARD;
+    }
+
+    /**
+     * isEliminated checks to see if the player is eliminated
+     * @return ELIMINATED
+     */
+    public boolean isEliminated()
+    {
+        return ELIMINATED;
+    }
+
+    /**
+     * getSet returns the desired set in the player's OWNED_SETS hand
+     * @param s is the number of the set in OWNED_SETS
+     * @return OWNED_SETS.get(s)
+     * @throws SetNotFoundException
+     */
+    public Set getSet(int s) throws SetNotFoundException
+    {
+        if(!OWNED_SETS.isEmpty())
+        {
+            return OWNED_SETS.get(s - 1);
+        } else{
+            throw new SetNotFoundException("You do not own any sets.");
+        }
     }
 }

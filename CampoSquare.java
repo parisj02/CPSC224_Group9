@@ -18,10 +18,11 @@ public class CampoSquare extends Property
     }
 
     /**
-     * displayPropertyInfo for class CampoSquare overrides displayPropertyInfo of class Player
+     * isCampoSquare checks to see if the current square is the campo square
+     * @return true
      */
-    public void displayPropertyInfo()
+    public boolean isCampoSquare()
     {
-        System.out.println("The Campo Square");
+        return true;
     }
 }

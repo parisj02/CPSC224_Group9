@@ -21,17 +21,27 @@ public class UtilityProperty extends Property
     }
 
     /**
-     * displayPropertyInfo of class UtilityProperty overrides displayPropertyInfo of class Property
+     * updateRent overrides updateRent of Property by updating the rent based on the number of Utilities that the
+     * player owns
      */
-    public void displayPropertyInfo()
+    public void updateRent(ZagopolyDice theDice)
     {
-        System.out.println("Property Name: " + this.NAME);
-        System.out.println("Property Price: " + this.PRICE);
-        System.out.println("Property Rent: 4 times the player's roll");
-        System.out.println("Property Mortgage: " + this.MORTGAGE);
-        if(isOwned())
-            System.out.println("Property Owner: " + this.OWNER.getName());
-        else
-            System.out.println("Property is unowned.");
+        if(OWNER.getNumberOfUtilities() == 1)
+        {
+            RENT = 4 * theDice.getTotalRoll();
+        }
+        if(OWNER.getNumberOfUtilities() == 2)
+        {
+            RENT = 10 * theDice.getTotalRoll();
+        }
+    }
+
+    /**
+     * isUtility checks if the property is a utility
+     * @return true
+     */
+    public boolean isUtility()
+    {
+        return true;
     }
 }
