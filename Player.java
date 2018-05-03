@@ -286,9 +286,9 @@ public class Player implements Cloneable
      */
     public void displayStats(ZagopolyTextWindow TextWindow)
     {
+        TextWindow.printMessage(" ");
         TEXT_WINDOW.printMessage("Here are player " + PLAYER_NUM + "'s stats: ");
         TEXT_WINDOW.printMessage("Current Balance: " + ACCOUNT);
-        TEXT_WINDOW.printMessage("Player is currently at square " + POSITION);
         if(!isFree())
             TEXT_WINDOW.printMessage("Player is currently in detention in Campo");
         if(HAND.isEmpty())
@@ -313,6 +313,7 @@ public class Player implements Cloneable
                 TEXT_WINDOW.printMessage("SET " + (i + 1) + ": " + OwnedSets[i].getSetName());
             }
         }
+        TextWindow.printMessage(" ");
     }
 
     /**

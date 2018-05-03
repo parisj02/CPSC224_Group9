@@ -1,3 +1,11 @@
+/**
+ * This class creates a text window that displays game messages to the user
+ * CPSC 224, Spring 2018
+ * Group Project
+ * @authors Connor Cooley, Jackson Paris, Nathan Vanos
+ * @version 1.0, 04/30/2018
+ */
+
 
 import java.awt.*;
 import java.awt.event.*;

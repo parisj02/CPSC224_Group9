@@ -122,7 +122,6 @@ public class GameBoardUI extends JPanel implements ActionListener
     public void resetRoll()
     {
         ROLL = 0;
-        DOUBLES = false;
     }
 
     /**
@@ -135,8 +134,21 @@ public class GameBoardUI extends JPanel implements ActionListener
         return ROLL;
     }
 
+    /**
+     * getDoubles returns the value of doubles
+     * @return DOUBLES
+     */
     public boolean getDoubles()
     {
         return DOUBLES;
+    }
+
+    /**
+     * getDice returns the dice
+     * @return DICE
+     */
+    public ZagopolyDice getDice()
+    {
+        return DICE;
     }
 }

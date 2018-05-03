@@ -15,5 +15,6 @@ public class GoSquare extends Property
     public GoSquare(Player players[], int XCoord, int YCoord)
     {
         super(0, 0, 0, XCoord, YCoord);
+        NAME = "Go";
     }
 }

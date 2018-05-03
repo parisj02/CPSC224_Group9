@@ -108,6 +108,7 @@ public class Property
         } else{                             // case that player doesn't want to buy
             TextWindow.printMessage("You have passed this property, it will remain unowned.");
         }
+        TextWindow.resetUserInput();
         this.OWNER = newOwner;
     }
 
