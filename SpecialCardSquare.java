@@ -337,11 +337,11 @@ public class SpecialCardSquare extends Property
                 TextWindow.printMessage("You lost your zag card, go straight to Hemmingson to check lost and found.");
                 currentPlayer.relocatePlayer(34);
                 gui.step(gameBoard, currentPlayer, currentPiece);
-                if(gameBoard.getSquare(24).isOwned())
+                if(gameBoard.getSquare(34).isOwned())
                 {
-                    payRelocationRent(gameBoard, currentPlayer, 24, TextWindow);
+                    payRelocationRent(gameBoard, currentPlayer, 34, TextWindow);
                 } else{
-                    gameBoard.getSquare(24).addOwner(currentPlayer, theDice, gameSets, TextWindow);
+                    gameBoard.getSquare(34).addOwner(currentPlayer, theDice, gameSets, TextWindow);
                 }
                 break;
         }

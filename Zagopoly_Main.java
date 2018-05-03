@@ -23,6 +23,7 @@ public class Zagopoly_Main
     /**
      * initPlayers initializes each player as a new Player and gets their names
      * @param players is the array holding the players of type Player
+     * @param TextWindow is the GUI that displays the game messages
      */
     public static void initPlayers(Player[] players, ZagopolyTextWindow TextWindow)
     {
@@ -36,7 +37,7 @@ public class Zagopoly_Main
      * getPlayerPriority rolls the dice for each player to see who goes first
      * @param theDice are the game dice
      * @param players are the players
-     * @param TextWindow is the gui for the game messages
+     * @param TextWindow is the GUI that displays the game messages
      */
     public static void setPlayerPriorities(ZagopolyDice theDice, Player[] players, ZagopolyTextWindow TextWindow)
     {
@@ -61,6 +62,7 @@ public class Zagopoly_Main
      * @param currentPlayer is the number of the player who is currently going
      * @param players is the array of players in the game
      * @param theDice is the game dice
+     * @param TextWindow is the GUI that displays the game messages
      */
     public static void postRollOptions(int currentPlayer, Player players[], ZagopolyDice theDice, ZagopolyTextWindow TextWindow)
     {
@@ -184,7 +186,8 @@ public class Zagopoly_Main
      * @param numberOfPlayers is the number of players in the game
      * @return iconArray
      */
-    public static PlayerIcon[] createIconArray(int numberOfPlayers){
+    public static PlayerIcon[] createIconArray(int numberOfPlayers)
+    {
         PlayerIcon[] iconArray = new PlayerIcon[numberOfPlayers];
         int count = 0;
         for(int i = 0; i <= numberOfPlayers - 1; i++){
@@ -232,17 +235,12 @@ public class Zagopoly_Main
             {
                 if(players[currentPlayer].isFree())     // case that the current player is not in campo during their turn
                 {
-                    gui.revealDice();
-                    int rolls = 0;
+                    int doublesRolled = 0;
                     boolean goAgain = true;
                     while(goAgain)
                     {
-                        if(rolls == 3)              // case that the player has rolled 3 doubles in a row
-                        {
-                            goAgain = false;
-                            TextWindow.printMessage("You are getting too lucky, go to Campo.");
-                            players[currentPlayer].imprisonPlayer();
-                        }
+                        gui.revealDice();
+
                         TextWindow.printMessage("It is Player " + players[currentPlayer].getPlayerNum() + "'s turn, please " +
                                 "roll the dice: click 'roll' to do so. ");
                             int roll = 0;
@@ -255,113 +253,125 @@ public class Zagopoly_Main
                                 System.out.printf("");
                                 roll = gui.getRoll();
                             }
+                            boolean doubles = gui.getDoubles();
+                            if(doubles)
+                                doublesRolled++;
+
+                        if(doublesRolled == 3)   // case that the player has rolled 3 doubles in a row
+                        {
+                            goAgain = false;
+                            TextWindow.printMessage("You are getting too lucky, go to Campo.");
+                            players[currentPlayer].imprisonPlayer();
+                        } else{ // case that this is not the third doubles in a row
                             players[currentPlayer].movePlayer(roll);
                             gui.step(gameBoard, players[currentPlayer], currentPlayer);
 
-                        if(players[currentPlayer].passedGo()) // case that the player moved past "Go"
-                        {
-                            TextWindow.printMessage("You have passed Go! Collect $200!!");
-                            players[currentPlayer].payPlayer(200);
-                        }
+                            if(players[currentPlayer].passedGo()) // case that the player moved past "Go"
+                            {
+                                TextWindow.printMessage("You have passed Go! Collect $200!!");
+                                players[currentPlayer].payPlayer(200);
+                            }
 
-                        delay();
-                        // Display info of square that was landed on
-                        Property currentSquare = gameBoard.getSquare(players[currentPlayer].currentSquare());
-                        TextWindow.printMessage("YOU HAVE LANDED ON " + currentSquare.getName());
-                        if(currentSquare.isForSale())               // case that the property can actually be bought
-                        {
-                            if(!currentSquare.isOwned())            // case that the property is not owned
+                            delay();
+                            // Display info of square that was landed on
+                            Property currentSquare = gameBoard.getSquare(players[currentPlayer].currentSquare());
+                            TextWindow.printMessage("YOU HAVE LANDED ON " + currentSquare.getName());
+                            if(currentSquare.isForSale())               // case that the property can actually be bought
                             {
-                                currentSquare.addOwner(players[currentPlayer], theDice, gameSets, TextWindow);
-                            } else{                      // case that the property is owned
-                                if(currentSquare.getOwner() == players[currentPlayer]) // case that this is your property
+                                if(!currentSquare.isOwned())            // case that the property is not owned
                                 {
-                                    TextWindow.printMessage("You have landed on one of your own properties! " +
-                                            "Isn't life sweet when you're rich? :)");
-                                } else{ // case that this isn't your property
-                                    TextWindow.printMessage("This property is owned by " + currentSquare.getOwnerNum());
-                                    if(currentSquare.isUtility()) // case that the property is a utility
+                                    currentSquare.addOwner(players[currentPlayer], theDice, gameSets, TextWindow);
+                                } else{                      // case that the property is owned
+                                    if(currentSquare.getOwner() == players[currentPlayer]) // case that this is your property
                                     {
-                                        TextWindow.printMessage("You must pay Player " + currentSquare.getOwnerNum() + " 4x your roll if " +
-                                                "the owner owns just this utility, and 10x your roll if the owner owns " +
-                                                "both utilities.");
-                                        currentSquare.updateRent(theDice);
+                                        TextWindow.printMessage("You have landed on one of your own properties! " +
+                                                "Isn't life sweet when you're rich? :)");
+                                    } else{ // case that this isn't your property
+                                        TextWindow.printMessage("This property is owned by Player " + currentSquare.getOwnerNum());
+                                        if(currentSquare.isUtility()) // case that the property is a utility
+                                        {
+                                            TextWindow.printMessage("You must pay Player " + currentSquare.getOwnerNum() + " 4x your roll if " +
+                                                    "the owner owns just this utility, and 10x your roll if the owner owns " +
+                                                    "both utilities.");
+                                            theDice = gui.getDice();
+                                            currentSquare.updateRent(theDice);
+                                        }
+                                        else if(currentSquare.isRestaurant()) // case that the property is a restaurant
+                                        {
+                                            TextWindow.printMessage("You must pay Player " + currentSquare.getOwnerNum() +
+                                                    " $50 if he/she owns 1 restaurant, $100 if he/she owns 2, $150 if he/she owns" +
+                                                    "3, and $200 if he/she owns all 4.");
+                                        }else{          // case that the property is a primary property (part of a color set)
+                                            TextWindow.printMessage("You must pay Player " + currentSquare.getOwnerNum() + " $" +
+                                                    currentSquare.getRent() + ": rent is double if the owner owns the set.");
+                                        }
+                                        if(players[currentPlayer].getBalance() < currentSquare.getRent())
+                                        {   // case that the player cannot pay the rent due to insufficient funds
+                                            TextWindow.printMessage("You do not have enough money in your account to pay " +
+                                                    "the owner of this property the desired rent.");
+                                            currentSquare.payOwnerRent();
+                                            players[currentPlayer].finePlayer(players[currentPlayer].getBalance());
+                                            // drains the current player's account
+                                            players[currentPlayer].eliminatePlayer();
+                                        } else{  // case that the player can pay the rent
+                                            currentSquare.payOwnerRent();
+                                            players[currentPlayer].finePlayer(currentSquare.getRent());
+                                            TextWindow.printMessage("You have paid Player " + currentSquare.getOwnerNum() + " $"
+                                                    + currentSquare.getRent());
+                                        }
                                     }
-                                    else if(currentSquare.isRestaurant()) // case that the property is a restaurant
+                                }
+                            }else{ // case that the property cannot be bought
+                                TextWindow.printMessage("This square is not a property");
+                                if(currentSquare.isCardSquare()) // case that the current square is a card square
+                                {
+                                    TextWindow.printMessage("You will receive the following card: ");
+                                    if(currentSquare.getNumber() == 2 || currentSquare.getNumber() == 17 ||
+                                            currentSquare.getNumber() == 33) // case of community service square
                                     {
-                                        TextWindow.printMessage("You must pay Player " + currentSquare.getOwnerNum() +
-                                                " $50 if he/she owns 1 restaurant, $100 if he/she owns 2, $150 if he/she owns" +
-                                                "3, and $200 if he/she owns all 4.");
-                                    }else{          // case that the property is a primary property (part of a color set)
-                                        TextWindow.printMessage("You must pay Player " + currentSquare.getOwnerNum() + " $" +
-                                                currentSquare.getRent() + ": rent is double if the owner owns the set.");
+                                        currentSquare.getServiceCard(players[currentPlayer], gameBoard, gui, currentPlayer, theDice, gameSets, TextWindow);
                                     }
-                                    if(players[currentPlayer].getBalance() < currentSquare.getRent())
-                                    {   // case that the player cannot pay the rent due to insufficient funds
-                                        TextWindow.printMessage("You do not have enough money in your account to pay " +
-                                                "the owner of this property the desired rent.");
-                                        currentSquare.payOwnerRent();
+                                    if(currentSquare.getNumber() == 7 || currentSquare.getNumber() == 22 ||
+                                            currentSquare.getNumber() == 36) // case of chance square
+                                    {
+                                        currentSquare.getChanceCard(players[currentPlayer], gameBoard, gui, currentPlayer, theDice, gameSets, TextWindow);
+                                    }
+                                    if(players[currentPlayer].passedGo()) // case that the special card moves player past Go
+                                    {
+                                        currentSquare = gameBoard.getSquare(0);
+                                        players[currentPlayer].payPlayer(200);
+                                    }
+                                }
+                                if(currentSquare.isTaxSquare()) // case that the current square is a tax square
+                                {
+                                    TextWindow.printMessage("You must pay $" + currentSquare.getRent());
+                                    if(currentSquare.getRent() > players[currentPlayer].getBalance())
+                                    { // player doesn't have money for tax
                                         players[currentPlayer].finePlayer(players[currentPlayer].getBalance());
-                                        // drains the current player's account
                                         players[currentPlayer].eliminatePlayer();
-                                    } else{  // case that the player can pay the rent
-                                        currentSquare.payOwnerRent();
+                                    } else{ // player has money for tax
                                         players[currentPlayer].finePlayer(currentSquare.getRent());
-                                        TextWindow.printMessage("You have paid Player " + currentSquare.getOwnerNum() + " $"
-                                                + currentSquare.getRent());
+                                        players[currentPlayer].displayStats(TextWindow);
                                     }
                                 }
-                            }
-                        }else{ // case that the property cannot be bought
-                            TextWindow.printMessage("This square is not a property");
-                            if(currentSquare.isCardSquare()) // case that the current square is a card square
-                            {
-                                TextWindow.printMessage("You will receive the following card: ");
-                                if(currentSquare.getNumber() == 2 || currentSquare.getNumber() == 17 ||
-                                        currentSquare.getNumber() == 33) // case of community service square
+                                if(currentSquare.isCampoSquare()) // case that the current square is the Campo Square
                                 {
-                                    currentSquare.getServiceCard(players[currentPlayer], gameBoard, gui, currentPlayer, theDice, gameSets, TextWindow);
+                                    TextWindow.printMessage("You are just visiting Campo, so you won't be imprisoned. :)");
                                 }
-                                if(currentSquare.getNumber() == 7 || currentSquare.getNumber() == 22 ||
-                                        currentSquare.getNumber() == 36) // case of chance square
+                                if(currentSquare.isGoToCampoSquare()) // case that the current square is "Go To Campo" Square
                                 {
-                                    currentSquare.getChanceCard(players[currentPlayer], gameBoard, gui, currentPlayer, theDice, gameSets, TextWindow);
-                                }
-                                if(players[currentPlayer].passedGo()) // case that the special card moves player past Go
-                                {
-                                    currentSquare = gameBoard.getSquare(0);
-                                    players[currentPlayer].payPlayer(200);
+                                    TextWindow.printMessage("Go directly to Campo. Do not pass go, do not collect $200.");
+                                    players[currentPlayer].imprisonPlayer();
+                                    gui.step(gameBoard, players[currentPlayer], currentPlayer);
+                                    theDice.resetDice();
                                 }
                             }
-                            if(currentSquare.isTaxSquare()) // case that the current square is a tax square
-                            {
-                                TextWindow.printMessage("You must pay $" + currentSquare.getRent());
-                                if(currentSquare.getRent() > players[currentPlayer].getBalance())
-                                { // player doesn't have money for tax
-                                    players[currentPlayer].finePlayer(players[currentPlayer].getBalance());
-                                    players[currentPlayer].eliminatePlayer();
-                                } else{ // player has money for tax
-                                    players[currentPlayer].finePlayer(currentSquare.getRent());
-                                    players[currentPlayer].displayStats(TextWindow);
-                                }
-                            }
-                            if(currentSquare.isCampoSquare()) // case that the current square is the Campo Square
-                            {
-                                TextWindow.printMessage("You are just visiting Campo, so you won't be imprisoned. :)");
-                            }
-                            if(currentSquare.isGoToCampoSquare()) // case that the current square is "Go To Campo" Square
-                            {
-                                TextWindow.printMessage("Go directly to Campo. Do not pass go, do not collect $200.");
-                                players[currentPlayer].imprisonPlayer();
-                                gui.step(gameBoard, players[currentPlayer], currentPlayer);
-                                theDice.resetDice();
-                            }
+                            theDice.resetDice();    // set total roll back to 0
+                            goAgain = false;
+                            doubles = gui.getDoubles();
+                            if(doubles)      // case that the player rolled doubles
+                                goAgain = true;
                         }
-                        theDice.resetDice();    // set total roll back to 0
-                        rolls++;                // increment number of times the player has rolled
-                        goAgain = false;
-                        if(theDice.doubles())      // case that the player rolled doubles
-                            goAgain = true;
                     }
 
                     // Post Roll Options

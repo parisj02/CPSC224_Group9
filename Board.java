@@ -9,7 +9,6 @@
 
 public class Board
 {
-    //private Property[] SETS;
     private Property[] THE_BOARD;
 
     /**
