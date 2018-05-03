@@ -1,3 +1,11 @@
+/**
+ * This class creates the main menu of the game of Zag-opoly
+ * CPSC 224, Spring 2018
+ * Group Project
+ * @authors Connor Cooley, Jackson Paris, Nathan Vanos
+ * @version 1.0, 04/18/2018
+ */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +25,7 @@ class MainMenu extends JFrame implements ActionListener
 
     /**
      * constructor for class MainMenu
+     * @param gui is the object containing
      */
     public MainMenu(GameBoardUI gui)
     {
@@ -47,7 +56,7 @@ class MainMenu extends JFrame implements ActionListener
     }
 
     /**
-     * initGUI initializes the GUI of the game
+     * initGUI initializes the GUI of the game board
      */
     public void initUI()
     {
@@ -83,7 +92,11 @@ class MainMenu extends JFrame implements ActionListener
         }
     }
 
-    private void openInstructions() throws IOException
+    /**
+     * openInstructions opens the Instructions text file
+     * @throws IOException
+     */
+    public void openInstructions() throws IOException
     {
         //text file, should be opening in default text editor
         File file = new File("res/Instructions.txt");

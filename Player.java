@@ -32,11 +32,11 @@ public class Player implements Cloneable
     /**
      * Constructor for class Player
      * @param pNumber is the number of players
+     * @param textWindow is the GUI that displays the game messages
      */
     public Player(int pNumber, ZagopolyTextWindow textWindow)
     {
         PLAYER_NUM = pNumber;
-        //NAME = pName;
         POSITION = 0;
         ACCOUNT = 1500;
         RESTAURANTS_OWNED = 0;

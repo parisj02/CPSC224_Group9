@@ -10,6 +10,8 @@ public class GoToCampo extends Property
 {
     /**
      * constructor of class GoToCampo
+     * @param XCoord is the X coordinate of the "Go To Campo" square on the board
+     * @param YCoord is the Y coordinate of the "Go to Campo" square on the board
      */
     public GoToCampo(int XCoord, int YCoord)
     {
@@ -18,7 +20,7 @@ public class GoToCampo extends Property
     }
 
     /**
-     * isGoToCampoSquare automatically returns true because this is the Go To Campo square
+     * isGoToCampoSquare checks to see if this is the "Go to Campo" square
      * @return true
      */
     public boolean isGoToCampoSquare()

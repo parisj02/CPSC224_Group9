@@ -10,6 +10,8 @@ public class CampoSquare extends Property
 {
     /**
      * constructor for class CampoSquare
+     * @param XCoord is the X coordinate of the CampoSquare on the board
+     * @param YCoord is the Y coordinate of the CampoSquare on the board
      */
     public CampoSquare(int XCoord, int YCoord)
     {

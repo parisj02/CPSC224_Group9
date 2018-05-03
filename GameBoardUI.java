@@ -29,6 +29,7 @@ public class GameBoardUI extends JPanel implements ActionListener
      * constructor for class GameBoardUI
      * @param iconArray is the array of player icons
      * @param numberOfPlayers is the number of players in the game
+     * @param TextWindow is the GUI that displays the game messages
      */
     public GameBoardUI(PlayerIcon[] iconArray, int numberOfPlayers, ZagopolyTextWindow TextWindow)
     {
@@ -44,7 +45,10 @@ public class GameBoardUI extends JPanel implements ActionListener
         TEXT_WINDOW = TextWindow;
     }
 
-
+    /**
+     * doDrawing draws a figure on the game board
+     * @param g is the object that draws the images on the board
+     */
     public void doDrawing(Graphics g)
     {
         Graphics2D g2d = (Graphics2D) g;
@@ -54,12 +58,22 @@ public class GameBoardUI extends JPanel implements ActionListener
         }
     }
 
+    /**
+     * step relocates the player icon on the GUI board
+     * @param gameBoard is the object containing the game board
+     * @param currentPlayer is the player who is currently rolling
+     * @param currentPiece is the number of the current player's piece
+     */
     public void step(Board gameBoard, Player currentPlayer, int currentPiece)
     {
         gamePieces[currentPiece].move(gameBoard, currentPlayer);
         repaint(getX(),getY(),getWidth(),getHeight());
     }
 
+    /**
+     * paintComponent paints the board on the GUI
+     * @param g is the object that draws the board
+     */
     public void paintComponent(Graphics g)
     {
         try {
@@ -74,7 +88,7 @@ public class GameBoardUI extends JPanel implements ActionListener
     }
 
     /**
-     * addButton adds the buttons to the game board gui
+     * addButton adds the buttons to the game board GUI
      */
     private void addDiceButton()
     {
@@ -93,6 +107,10 @@ public class GameBoardUI extends JPanel implements ActionListener
         DiceButtonPanel.setVisible(false);
     }
 
+    /**
+     * actionPerformed is a function inherited from the interface ActionListener that handles an event
+     * @param e is the event in question
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {

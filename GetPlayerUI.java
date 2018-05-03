@@ -22,6 +22,9 @@ public class GetPlayerUI extends JFrame implements ActionListener
     private JButton FourPlayerButton = new JButton("4 Players");
     private int NUM_PLAYERS;
 
+    /**
+     * constructor of class GetPlayerUI
+     */
     public GetPlayerUI()
     {
         NUM_PLAYERS = 0;
@@ -36,7 +39,7 @@ public class GetPlayerUI extends JFrame implements ActionListener
     }
 
     /**
-     * addButtons adds the buttons to the main menu
+     * addButtons adds the buttons to the number of players menu
      */
     private void addButtons()
     {
